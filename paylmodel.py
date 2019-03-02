@@ -4,12 +4,16 @@ import os
 #Length Conditioned n-gram Payload Model
 
 class PaylModel(object):
+    DIRNAME = "models"
+    EXT_FILENAME = ".payl"
 
     def __init__(self, port, length):
         self.port = port
         self.length = length
         self.grams = {}
         # print self.grams
+        # Creating a file for the payl model according to the length.
+        self.filename = self.DIRNAME + "/" + str(self.port) + "-" + str(self.length) + self.EXT_FILENAME
 
     #creating a model considering which charecter occured how many times
     def add_grams(self, grams):
@@ -63,6 +67,21 @@ class PaylModel(object):
             dist += tmp
 
         return dist
+
+    def save(self):
+        if not os.path.isdir(self.DIRNAME): #assumes path exists
+            os.mkdir(self.DIRNAME) #create a directory
+
+        fmodel = open(self.filename, "w") #check write permision
+        if not fmodel:
+            print "failed to write (Did not save model)"
+            return
+
+        for key, value in self.grams.items():
+            fmodel.write(str(key) + ";" + str(value.mean) + ";" + str(value.stddev) + ";" + str(value.count) + "\n")
+
+        fmodel.close()
+        print "Model " + str(self.port) + "-" + str(self.length) + " was sucsessfully saved!"
 
 class ByteFrequency(object):
     def __init__(self):

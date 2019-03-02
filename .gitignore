@@ -1,2 +1,4 @@
 /Other
 /*.pyc
+/models
+/*.pcap
