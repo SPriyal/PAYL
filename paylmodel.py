@@ -83,6 +83,24 @@ class PaylModel(object):
         fmodel.close()
         print "Model " + str(self.port) + "-" + str(self.length) + " was sucsessfully saved!"
 
+    def load(self):
+        if not os.path.exists(self.filename):
+            print "No file for model " + str(self.port) + "-" + str(self.length)
+            return
+
+        fmodel = open(self.filename, "r") #makes sure its readable
+
+        for line in fmodel.readlines():
+            splitted = line.split(";")
+            # print splitted
+            ByteFrequenci = ByteFrequency()
+            ByteFrequenci.mean = splitted[1]
+            ByteFrequenci.stddev = splitted[2]
+            ByteFrequenci.count = splitted[3]
+            self.grams[splitted[0]] = ByteFrequenci
+
+        fmodel.close()
+
 class ByteFrequency(object):
     def __init__(self):
         self.mean = 0
